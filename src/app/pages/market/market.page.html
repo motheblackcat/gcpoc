@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <!-- TODO: Add menu -->
+    <ion-title>
+      Market
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid *ngIf="assets">
+    <!-- TODO: Link rate selector -->
+    <ion-row class="ion-align-items-center ion-padding-bottom">
+      <ion-col size="1">
+        <ion-icon name="search" size="small"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-input #input clearInput placeholder="Search by name" (ionChange)="updateSearch(input.value)"></ion-input>
+      </ion-col>
+      <ion-col *ngIf="rates" size="4">
+        <ion-select #select interface="popover" placeholder="USD" value="USD" (ionChange)="updateRates(select.value)">
+          <ion-select-option *ngFor="let rate of rates" [value]="rate.symbol">
+            {{ rate.symbol }} {{ rate.currencySymbol ? '( ' + rate.currencySymbol + ' )' : '' }}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-text-center ion-padding-bottom">
+      <ion-col size="1"><b>#</b></ion-col>
+      <ion-col size="1"></ion-col>
+      <ion-col><b>NAME</b></ion-col>
+      <ion-col><b>PRICE</b></ion-col>
+      <ion-col size="2"><b>V~ 24h</b></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let asset of searchedAssets"
+      routerLink="/details/{{ asset.id }}/{{ selectedRate ? selectedRate.id : united-states-dollar }}"
+      class="ion-text-center ion-align-items-center ion-padding-bottom">
+      <ion-col size="1">{{ asset.rank }} </ion-col>
+      <ion-col size="1">
+        <ion-img src="https://assets.coincap.io/assets/icons/{{ asset.symbol | lowercase }}@2x.png" alt="{{ asset.name }}"></ion-img>
+      </ion-col>
+      <ion-col>{{ asset.name }} ({{ asset.symbol }})</ion-col>
+      <ion-col>{{ asset.priceUsd | currency: selectedRate ? selectedRate.currencySymbol : 'USD' }}</ion-col>
+      <ion-col size="2">
+        <ion-text [color]="asset.changePercent24Hr > 0 ? 'success' : 'danger'">
+          {{ asset.changePercent24Hr | number: '1.0-2'  }}%
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-no-content *ngIf="assets === null"></app-no-content>
+
+</ion-content>

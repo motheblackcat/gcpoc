@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="asset">
+      <div class="d-flex ion-justify-content-center ion-align-items-center">
+        <img class="ion-padding-end" src="https://assets.coincap.io/assets/icons/{{ asset.symbol | lowercase }}@2x.png" height="25px"
+          alt="{{ asset.name }}">
+        <ion-label>{{ asset.name }}</ion-label>
+      </div>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="icon.name = icon.name === 'star-outline' ? 'star' : 'star-outline'">
+        <ion-icon #icon name="star-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid *ngIf="asset">
+    <ion-row class="ion-padding-bottom">
+      <ion-col>
+        <canvas id="chart"></canvas>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="noData" class="ion-padding-bottom">
+      <ion-col>
+        <ion-item color="none" lines="none">
+          <ion-icon slot="start" name="alert-circle-outline" size="large"></ion-icon>
+          <ion-label>NO HISTORICAL DATA</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Rank</ion-col>
+      <ion-col size="6">{{ asset.rank }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Symbol</ion-col>
+      <ion-col size="6">{{ asset.symbol }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Current Supply</ion-col>
+      <ion-col size="6">
+        {{ asset.supply | number }}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Max Supply</ion-col>
+      <ion-col size="6">
+        {{ (asset.maxSupply) ? (asset.maxSupply | number) : 'No max supply'}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Market Cap</ion-col>
+      <ion-col size="6">{{ asset.marketCapUsd | currency: rate.symbol }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Volume 24H</ion-col>
+      <ion-col size="6">{{ asset.volumeUsd24Hr | currency: rate.symbol }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Price</ion-col>
+      <ion-col size="6">{{ asset.priceUsd | currency: rate.symbol }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Variation 24H</ion-col>
+      <ion-col size="6">
+        <ion-text [color]="asset.changePercent24Hr > 0 ? 'success' : 'danger'">
+          {{ asset.changePercent24Hr | number: '1.0-2'  }}%
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Volume Average 24H</ion-col>
+      <ion-col size="6">{{ asset.vwap24Hr | number }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">Explorer</ion-col>
+      <ion-col size="6"><a href="{{ asset.explorer }}" target="_blank">{{ asset.explorer }}</a></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-no-content *ngIf="asset === null"></app-no-content>
+
+</ion-content>
