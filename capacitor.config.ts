@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
-  appName: 'gc',
+  appId: 'gcpoc.me',
+  appName: 'gcpoc',
   webDir: 'www',
   bundledWebRuntime: false
 };

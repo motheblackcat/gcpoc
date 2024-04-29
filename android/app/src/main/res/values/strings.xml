@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">gc</string>
-    <string name="title_activity_main">gc</string>
-    <string name="package_name">com.gc.app</string>
-    <string name="custom_url_scheme">com.gc.app</string>
-</resources>

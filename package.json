@@ -1,8 +1,8 @@
 {
-  "name": "gc",
+  "name": "gcpoc",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Morad El Hamdouni",
+  "homepage": "https://motheblackcat.github.io/gcpoc",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
