@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 import { Asset, Assets } from '../interface/assets.interface';
 import { Candle, Candles } from '../interface/candles.interface';
 import { Rate, Rates } from '../interface/rates.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-/* TODO: Refacto all calls */
 
 export class CoincapService {
   /** Get all assets from CoinCap API  */
-  getAssets(limit: number): Promise<null | Asset[]> {
-    return fetch('https://api.coincap.io/v2/assets')
+  getAssets(limit: number): Promise<any> {
+    return fetch(`https://api.coincap.io/v2/assets?limit=${limit}`)
       .then((res: Response) => res.json())
-      .then((body: Assets) => body.data.splice(0, limit))
+      .then((body: Assets) => body.data)
       .catch(() => null);
   }
 

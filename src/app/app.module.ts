@@ -6,11 +6,11 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DetailsComponent } from './pages/details/details.component';
-import { MarketPage } from './pages/market/market.page';
+import { MarketComponent } from './pages/market/market.component';
 import { NoContentComponent } from './shared/no-content/no-content.component';
 
 @NgModule({
-  declarations: [AppComponent, MarketPage, DetailsComponent, NoContentComponent],
+  declarations: [AppComponent, MarketComponent, DetailsComponent, NoContentComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

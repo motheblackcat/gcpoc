@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DetailsComponent } from './pages/details/details.component';
-import { MarketPage } from './pages/market/market.page';
+import { MarketComponent } from './pages/market/market.component';
 
 const routes: Routes = [
   {
     path: 'market',
-    component: MarketPage
+    component: MarketComponent
   },
   {
     path: 'details/:assetId/:rateId',

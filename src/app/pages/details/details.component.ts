@@ -79,7 +79,5 @@ export class DetailsComponent implements OnInit {
         }
       });
     }
-
-    this.loadingService.dismiss();
   }
 }

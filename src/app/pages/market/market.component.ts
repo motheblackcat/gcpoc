@@ -8,9 +8,9 @@ import { Asset } from '../../interface/assets.interface';
 
 @Component({
   selector: 'app-market',
-  templateUrl: 'market.page.html'
+  templateUrl: 'market.component.html'
 })
-export class MarketPage implements OnInit {
+export class MarketComponent implements OnInit {
   assets: Asset[];
   searchedAssets: Asset[];
   rates: void | Rate[];
@@ -19,10 +19,11 @@ export class MarketPage implements OnInit {
   constructor(private loadingService: LoadingService, private coinCapService: CoincapService) { }
 
   async ngOnInit() {
-    this.loadingService.present();
+    // this.loadingService.present();
 
-    /* TODO: Add load more crypto feature */
-    this.assets = await this.coinCapService.getAssets(10);
+    /* TODO: Add load more crypto / pagination feature */
+    const limit = 10;
+    this.assets = await this.coinCapService.getAssets(limit);
     this.searchedAssets = JSON.parse(JSON.stringify(this.assets));
 
     /* TODO: Dynamic prices made with websocket ADD visual queue */
@@ -39,8 +40,6 @@ export class MarketPage implements OnInit {
     if (this.rates) {
       this.selectedRate = this.rates.find((rate: Rate) => rate.symbol === 'USD');
     }
-
-    this.loadingService.dismiss();
   }
 
   updateSearch(searchInput: string) {
