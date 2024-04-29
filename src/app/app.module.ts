@@ -10,10 +10,9 @@ import { MarketComponent } from './pages/market/market.component';
 import { NoContentComponent } from './shared/no-content/no-content.component';
 
 @NgModule({
-  declarations: [AppComponent, MarketComponent, DetailsComponent, NoContentComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, MarketComponent, DetailsComponent, NoContentComponent],
+    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+    providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
