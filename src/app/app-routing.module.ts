@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DetailsComponent } from './pages/details/details.component';
 import { MarketComponent } from './pages/market/market.component';
 
+// TODO: Fix routing
 const routes: Routes = [
   {
     path: 'market',
@@ -15,7 +16,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'market'
+    redirectTo: 'market',
+    pathMatch: 'full'
   },
   {
     path: '',

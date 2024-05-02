@@ -27,11 +27,10 @@ export class CoincapService {
   }
 
   /** Get all rates from CoinCap API */
-  getRates(symbols: string[]): Promise<void | Rate[]> {
+  getRates(): Promise<void | Rate[]> {
     return fetch('https://api.coincap.io/v2/rates')
       .then((res: Response) => res.json())
       .then((body: Rates) => body.data)
-      .then((rates: Rate[]) => rates.filter((rate: Rate) => symbols.includes(rate.symbol)))
       .catch(err => console.log('ERROR ON GET RATES', err));
   }
 
@@ -44,14 +43,11 @@ export class CoincapService {
   }
 
   /** Get historical data on a market with a 1 day interval on a week and prices based on usd-coin  */
-  // TODO: Fix usd-coin used as a base instead of usd / eur (fiat)
+  // TODO: Fix usd-coin used as a base instead of selectedRate
   getCandles(id: string): Promise<void | Candle[]> {
     const now = new Date().getTime();
     const lastWeek = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7).getTime();
-    console.log(new Date(now), new Date(lastWeek));
-    return fetch(
-      `https://api.coincap.io/v2/candles?exchange=poloniex&interval=d1&baseId=${id}&quoteId=usd-coin&start=${lastWeek}&end=${now}`
-    )
+    return fetch(`https://api.coincap.io/v2/candles?exchange=poloniex&interval=d1&baseId=${id}&quoteId=usd-coin&start=${lastWeek}&end=${now}`)
       .then((res: Response) => res.json())
       .then((body: Candles) => body.data)
       .catch(err => console.log('ERROR ON GET CANDLES', err));

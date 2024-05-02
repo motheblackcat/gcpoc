@@ -14,7 +14,9 @@ export class MarketComponent implements OnInit {
   assets: Asset[];
   searchedAssets: Asset[];
   rates: void | Rate[];
+  ratesList: { id: string, symbol: string }[];
   selectedRate: Rate;
+  defaultRate = 'EUR'
 
   constructor(private loadingService: LoadingService, private coinCapService: CoincapService) { }
 
@@ -24,39 +26,45 @@ export class MarketComponent implements OnInit {
     /* TODO: Add load more crypto / pagination feature */
     const limit = 10;
     this.assets = await this.coinCapService.getAssets(limit);
-    this.searchedAssets = JSON.parse(JSON.stringify(this.assets));
+    this.rates = await this.coinCapService.getRates();
 
-    /* TODO: Dynamic prices made with websocket ADD visual queue */
-    if (this.assets) {
-      const ids = this.assets.map((asset: Asset) => asset.id).toString();
-      const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${ids}`);
-      pricesWs.onmessage = (msg) => {
-        this.searchedAssets.map((asset: Asset) =>
-          asset.priceUsd = JSON.parse(msg.data)[asset.id] ? (JSON.parse(msg.data)[asset.id] * this.selectedRate.rateUsd) : asset.priceUsd);
-      };
+    if (this.rates) {
+      this.ratesList = this.rates.map((rate: Rate) => ({ id: rate.id.replace(/-/g, ' '), symbol: rate.symbol })).sort((a, b) => a.symbol.localeCompare(b.symbol));
+      this.selectedRate = this.rates.find((rate: Rate) => rate.symbol === this.defaultRate);
     }
 
-    this.rates = await this.coinCapService.getRates(['USD', 'EUR']);
-    if (this.rates) {
-      this.selectedRate = this.rates.find((rate: Rate) => rate.symbol === 'USD');
+    /* TODO: Add visual queue when a price updates from the websocket */
+    if (this.assets) {
+      this.searchedAssets = this.assets.map((asset: Asset) => ({ ...asset, priceUsd: asset.priceUsd / this.selectedRate.rateUsd }));
+
+      const ids = this.assets.map((asset: Asset) => asset.id);
+      const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${ids}`);
+
+      pricesWs.onmessage = (msg) => {
+        const dataObject = JSON.parse(msg.data);
+
+        this.searchedAssets.map((asset: Asset) => {
+          if (dataObject[asset.id]) {
+            asset.priceUsd = dataObject[asset.id] / this.selectedRate.rateUsd;
+          }
+        });
+      };
     }
   }
 
   updateSearch(searchInput: string) {
     if (searchInput) {
       const formatedSearchInput = searchInput.toLowerCase();
-      this.searchedAssets = [...this.assets.filter((asset: Asset) => asset.id.includes(formatedSearchInput))];
+      this.searchedAssets = this.assets.filter((asset: Asset) => asset.id.includes(formatedSearchInput) || asset.symbol.toLowerCase().includes(formatedSearchInput));
     } else {
-      this.searchedAssets = JSON.parse(JSON.stringify(this.assets));
+      this.searchedAssets = this.assets;
     }
   }
 
-  /* TODO: Fix rate updates on search */
   updateRates(rateSymbol: string) {
     if (this.rates) {
       this.selectedRate = this.rates.find((rate: Rate) => rate.symbol === rateSymbol);
-      this.searchedAssets.map((asset: Asset, index: number) => asset.priceUsd = this.assets[index].priceUsd);
-      this.searchedAssets.map((asset: Asset) => asset.priceUsd = asset.priceUsd * this.selectedRate.rateUsd);
+      this.searchedAssets = this.assets.map((asset: Asset) => ({ ...asset, priceUsd: asset.priceUsd / this.selectedRate.rateUsd }));
     }
   }
 }

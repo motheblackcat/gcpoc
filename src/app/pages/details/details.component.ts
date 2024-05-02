@@ -19,12 +19,11 @@ export class DetailsComponent implements OnInit {
   rate: Rate;
   asset: Asset;
   data: number[];
-  noData: boolean;
 
   constructor(private activatedRoute: ActivatedRoute, private loadingService: LoadingService, private coinCapService: CoincapService) { }
 
   async ngOnInit() {
-    this.loadingService.present();
+    // this.loadingService.present();
 
     /* TODO: Use localstorage to keep asset / rate? */
     this.assetId = this.activatedRoute.snapshot.params.assetId;
@@ -46,7 +45,7 @@ export class DetailsComponent implements OnInit {
 
       const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${this.asset.id}`);
       pricesWs.onmessage = (msg) => {
-        this.asset.priceUsd = JSON.parse(msg.data)[this.asset.id] * rateUsd;
+        this.asset.priceUsd = JSON.parse(msg.data)[this.asset.id] / rateUsd;
       };
     }
 
@@ -55,11 +54,9 @@ export class DetailsComponent implements OnInit {
     /* TODO: Fix non working for usd-coin & check config (details) */
     /* TODO: Move graph to its own component */
     const candles = await this.coinCapService.getCandles(this.assetId);
-    console.log(candles);
     if (document.getElementById('chart') && candles) {
       const labels = candles.map((candle: Candle) => new Date(candle.period).toLocaleDateString());
       const data = candles.map((candle: Candle) => candle.open);
-      this.noData = data.length <= 0;
 
       /* TODO: Add 24h graphs */
       /* TODO: Check low values SHIBA INU */

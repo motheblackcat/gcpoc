@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">Market</ion-title>
+    <ion-title>Crypto Market Top 10</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,10 +12,10 @@
       <ion-col>
         <ion-searchbar #search placeholder="Search asset by name" show-clear-button="always" (ionChange)="updateSearch(search.value)"></ion-searchbar>
       </ion-col>
-      <ion-col *ngIf="rates" size="4">
-        <ion-select #select aria-label="rate" value="USD" (ionChange)="updateRates(select.value)">
-          <ion-select-option *ngFor="let rate of rates" [value]="rate.symbol">
-            {{ rate.symbol }} {{ rate.currencySymbol }}
+      <ion-col *ngIf="rates" size="2">
+        <ion-select #select aria-label="rate" [value]="defaultRate" interface="popover" (ionChange)="updateRates(select.value)">
+          <ion-select-option *ngFor="let rate of ratesList" [value]="rate.symbol">
+            {{ rate.symbol }} ({{ rate.id }})
           </ion-select-option>
         </ion-select>
       </ion-col>
@@ -27,13 +27,13 @@
       <ion-col><b>PRICE</b></ion-col>
       <ion-col size="2"><b>V~ 24h</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let asset of searchedAssets" routerLink="/details/{{ asset.id }}/{{ selectedRate ? selectedRate.id : 'united-states-dollar' }}" class="ion-text-center ion-align-items-center ion-padding-bottom">
-      <ion-col size="1">{{ asset.rank }} </ion-col>
+    <ion-row *ngFor="let asset of searchedAssets" routerLink="/details/{{ asset.id }}/{{ selectedRate.id }}" class="ion-text-center ion-align-items-center ion-padding-bottom">
+      <ion-col size="1">{{ asset.rank }}</ion-col>
       <ion-col size="1">
         <ion-img src="https://assets.coincap.io/assets/icons/{{ asset.symbol | lowercase }}@2x.png" alt="{{ asset.name }}"></ion-img>
       </ion-col>
       <ion-col>{{ asset.name }} ({{ asset.symbol }})</ion-col>
-      <ion-col>{{ asset.priceUsd | currency: selectedRate ? selectedRate.currencySymbol : 'USD' }}</ion-col>
+      <ion-col>{{ asset.priceUsd | currency: selectedRate.currencySymbol }}</ion-col>
       <ion-col size="2">
         <ion-text [color]="asset.changePercent24Hr > 0 ? 'success' : 'danger'">
           {{ asset.changePercent24Hr | number: '1.0-2' }}%
